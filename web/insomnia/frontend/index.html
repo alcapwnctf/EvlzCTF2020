@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)https://getbootstrap.com/docs/4.0/examples/cover/ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://getbootstrap.com/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>Insomnia</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/cover/">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link href="./css/cover.css" rel="stylesheet">
+  </head>
+
+  <body class="text-center" data-gr-c-s-loaded="true">
+
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+      <header class="masthead mb-auto">
+        <div class="inner">
+          <h3 class="masthead-brand">Insomnia</h3>
+          <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link" href="https://twitter.com/alcapwnctf">Contact</a>
+          </nav>
+        </div>
+      </header>
+
+      <main role="main" class="inner cover">
+        <h1 class="cover-heading">Meme Generator</h1>
+        <div class='row'>
+          <div class='col'>
+            <form onsubmit="(evt) => {evt.preventDefault()}" id="memeform">
+                <div class="form-group">
+                  <label for="top">Top Text</label>
+                  <input type="text" class="form-control" name='top' id="top" aria-describedby="emailHelp">
+                </div>
+                <div class="form-group">
+                  <label for="bottom">Bottom Text</label>
+                  <input type="text" name='bottom' class="form-control" id="bottom">
+                </div>
+                <div class="form-group">
+                  <label for="meme">Meme</label>
+                  <select name="meme" class="form-control" id="meme">
+                    <option>doge</option>
+                    <option>TrollFace</option>
+                    <option>Dolan</option>
+                    <option>YUNO</option>
+                  </select>
+                </div>
+            </form>
+            <button onclick="generate()" class="btn btn-lg btn-primary">Meme!</button>
+          </div>
+        </div>
+        <div class='row p-3'>
+            <div class='col'>
+                <div id='content'>
+  
+                </div>
+            </div>
+        </div>
+      </main>
+
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+          <p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+        const form = document.querySelector('#memeform')
+        
+        const API_ROOT = ""
+        
+        const API_MEME_ENDPOINT = "/meme"
+        
+        const API_V1 = "/api"
+
+        const postJson = async (version, endpoint, payload) => {
+            let req = await fetch(`${API_ROOT}${version}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const blob = await req.blob()
+            
+            return blob
+        }
+        
+        const setContent = (htmlData) => {
+            document.querySelector("#content").innerHTML = htmlData
+        }
+        
+        async function generate() {
+            let top = form.top.value
+            let bottom = form.bottom.value
+            let meme = form.meme.value
+
+            let payload = {
+                "top": top,
+                "bottom": bottom,
+                "meme": meme
+            }
+
+            let blob = await postJson("/api", API_MEME_ENDPOINT, payload)
+            const url = window.URL.createObjectURL(blob)
+            setContent(`<div><img class='img-responsive' width='500px' src="${url}" /></div>`)
+        }
+    </script>
+</body>
+</html>
+

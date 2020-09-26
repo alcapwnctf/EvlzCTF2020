@@ -1,0 +1,213 @@
+version: '3.7'
+
+services:
+
+    traefik:
+        image: traefik:v2.3
+        restart: always
+        command: 
+            - --log.level=INFO
+            - --accesslog=true
+            - --entrypoints.web.address=:80
+            - --entrypoints.cholera.address=:11337
+            - --entrypoints.superbug.address=:26337
+            - --entrypoints.hiv.address=:31233
+            - --entrypoints.malaria.address=:42147
+            - --entrypoints.autism.address=:5200
+            - --entrypoints.diarrhea.address=:42012
+            - --entrypoints.egg.address=:5001
+            - --entrypoints.schizophrenia.address=:5300
+            - --entrypoints.machinelearning.address=:32100
+            - --entrypoints.sars.address=:6969
+            - --entrypoints.retrovirus.address=:5980
+            - --entrypoints.adhd.address=:9089
+
+            - --api
+            - --providers.docker=true
+            - --providers.docker.exposedByDefault=false
+            - --providers.docker.network=challenge_net
+        ports: 
+            - "80:80"
+            - "11337:11337"
+            - "26337:26337"
+            - "31233:31233"
+            - "42147:42147"
+            - "5200:5200"
+            - "5300:5300"
+            - "6969:6969"
+            - "9089:9089"
+            - "42012:42012"
+            - "5001:5001"
+            - "32100:32100"
+            - "5980:5980"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.traefik.entrypoints=web"
+            - "traefik.http.routers.traefik.rule=Host(`traefik.game.alcapwnctf.in`)"
+            - "traefik.http.routers.traefik.service=api@internal"
+            - "traefik.http.routers.traefik.middlewares=traefikauth"
+            - "traefik.http.middlewares.traefikauth.basicauth.users=admin:$$apr1$$PeKOwCJj$$m3rsBGdB473YmXBWSvNvF1"
+
+    pwn_cholera:
+        build: 
+            context: ./pwn/cholera/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.cholera.entrypoints=cholera"
+            - "traefik.tcp.routers.cholera.rule=HostSNI(`*`)"
+
+    pwn_superbug:
+        build: 
+            context: ./pwn/superbug/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.superbug.entrypoints=superbug"
+            - "traefik.tcp.routers.superbug.rule=HostSNI(`*`)"
+
+    pwn_hiv:
+        build: 
+            context: ./pwn/hiv/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.hiv.entrypoints=hiv"
+            - "traefik.tcp.routers.hiv.rule=HostSNI(`*`)"
+
+    pwn_malaria:
+        build: 
+            context: ./pwn/malaria/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.malaria.entrypoints=malaria"
+            - "traefik.tcp.routers.malaria.rule=HostSNI(`*`)"
+
+    crypto_autism:
+        build: 
+            context: ./crypto/autism/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.autism.entrypoints=autism"
+            - "traefik.tcp.routers.autism.rule=HostSNI(`*`)"
+
+    crypto_schizophrenia:
+        build: 
+            context: ./crypto/schizophrenia/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.schizophrenia.entrypoints=schizophrenia"
+            - "traefik.tcp.routers.schizophrenia.rule=HostSNI(`*`)"
+
+    crypto_diarrhea:
+        build: 
+            context: ./crypto/diarrhea/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.diarrhea.entrypoints=diarrhea"
+            - "traefik.tcp.routers.diarrhea.rule=HostSNI(`*`)"
+
+    crypto_egg:
+        build: 
+            context: ./crypto/egg/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.egg.entrypoints=egg"
+            - "traefik.tcp.routers.egg.rule=HostSNI(`*`)"
+
+    reverse_sars:
+        build: 
+            context: ./reverse/sars/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.sars.entrypoints=sars"
+            - "traefik.tcp.routers.sars.rule=HostSNI(`*`)"
+
+    reverse_retrovirus:
+        build: 
+            context: ./reverse/retrovirus/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.retrovirus.entrypoints=retrovirus"
+            - "traefik.tcp.routers.retrovirus.rule=HostSNI(`*`)"
+
+    misc_machinelearning:
+        build: 
+            context: ./misc/machinelearning/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.machinelearning.entrypoints=machinelearning"
+            - "traefik.tcp.routers.machinelearning.rule=HostSNI(`*`)"
+
+    misc_adhd:
+        build: 
+            context: ./misc/adhd/docker
+        restart: always
+        depends_on: 
+            - traefik
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.tcp.routers.adhd.entrypoints=adhd"
+            - "traefik.tcp.routers.adhd.rule=HostSNI(`*`)"
+
+networks:
+    ctfnet:
+        name: challenge_net

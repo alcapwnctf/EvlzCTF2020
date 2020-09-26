@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+    redis:
+      image: redis:latest
+      networks:
+        - internal
+    web_tvirus:
+        build: .
+        networks:
+          - ctfnet
+          - internal
+        environment:
+          - REDIS_HOST=redis
+          - USERAGENT=Admins User Agent - Never Gonna Give You Up, Never Gonna Let You Down
+          - APIROOT=http://127.0.0.1:80
+          - ADMINUSERNAME=RICKASTLEY
+          - ADMINPASSWORD=GIVEYOUUPNEVERGONNA
+          - ADMINORGANIZATION=Internet
+          - FLAG=evlz{never_gonna_cache_you_down}ctf
+          - GETFLAGWAIT=10
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.tvirus.entrypoints=web"
+          - "traefik.http.routers.tvirus.rule=Host(`tvirus.game.alcapwnctf.in`)"
+networks:
+  ctfnet:
+    name: challenge_net
+    external: true
+  internal:
+        

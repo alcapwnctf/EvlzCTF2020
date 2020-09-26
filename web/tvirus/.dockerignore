@@ -1,0 +1,4 @@
+env/
+*.pyc
+sql_app.db
+frontend/vaccine/node_modules

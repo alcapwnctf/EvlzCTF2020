@@ -1,0 +1,7 @@
+:8888
+root * /frontend
+file_server browse
+
+route /api* {
+    reverse_proxy 127.0.0.1:8000
+}

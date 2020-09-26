@@ -1,0 +1,25 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    networks:
+      - internal
+  tveronica:
+    build: .
+    environment:
+      - REDIS_HOST=redis
+      - FLAG=evlz{scan_not_keys_is_the_way_to_go}ctf
+    networks:
+      - ctfnet
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tveronica.entrypoints=web"
+      - "traefik.http.routers.tveronica.rule=Host(`tveronica.game.alcapwnctf.in`)"
+
+networks:
+  ctfnet:
+      name: challenge_net
+      external: true
+  internal:
+    

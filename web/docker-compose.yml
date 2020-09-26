@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+    traefik:
+        image: traefik:v2.3
+        restart: always
+        command: 
+            - --log.level=INFO
+            - --accesslog=true
+            - --entrypoints.web.address=:80
+
+            - --api
+            - --providers.docker=true
+            - --providers.docker.exposedByDefault=false
+            - --providers.docker.network=challenge_net
+        ports: 
+            - "80:80"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+            - ctfnet
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.traefik.entrypoints=web"
+            - "traefik.http.routers.traefik.rule=Host(`webtraefik.game.alcapwnctf.in`)"
+            - "traefik.http.routers.traefik.service=api@internal"
+            - "traefik.http.routers.traefik.middlewares=traefikauth"
+            - "traefik.http.middlewares.traefikauth.basicauth.users=admin:$$apr1$$PeKOwCJj$$m3rsBGdB473YmXBWSvNvF1"
+
+networks:
+    ctfnet:
+        name: challenge_net
+        external: true

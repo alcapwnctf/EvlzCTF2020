@@ -1,0 +1,4 @@
+env/
+*.pyc
+sql_app.db
+node_modules

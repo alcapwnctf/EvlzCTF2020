@@ -1,0 +1,10 @@
+syntax = "proto3";
+package channel;
+
+option go_package = "pkg/proto/v1";
+
+message ChannelMessage {
+  string reqType = 1;
+  string clientId = 2;
+  string message = 3;
+}
